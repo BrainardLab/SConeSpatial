@@ -71,6 +71,7 @@ setpref(projectName,'SCONAnalysis',fullfile(baseDir,'SCON_analysis'));
 
 % Check data dir (This is for screen stability and channel additivity data)
 setpref(projectName,'CheckDataFolder',fullfile(baseDir,'SCON_materials','JandJProjector','CheckData'));
+setpref(projectName,'CheckDataFolderSACC',fullfile(baseDir,'SCON_materials','FromSACCMeasurements','JandJProjector','CheckData'));
 
 % SCON materials.
 setpref(projectName,'SCONMaterials',fullfile(baseDir,'SCON_materials'));

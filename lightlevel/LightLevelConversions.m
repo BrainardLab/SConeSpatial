@@ -15,11 +15,9 @@
 %     some broadband stimulus.  Gets 100-160 cd/m2 luminance.
 
 % History:
-%    10/29/15  dhb         Wrote (again, since I lost the first version)
-%                          from OLLightLevelCheck
-%    11/02/18  dhb         Added isomerization rate and fraction bleached calculations.
-%    01/02/20  dhb         Version for LED based stimulator
-%    04/22/22  dhb, smo    Edited it for SACC project.
+%    01/12/24  dhb, fh     Started to write version to understand S cone acuity.
+%                          We began with LightLevelConversiions1 from the
+%                          SACC project.
 
 %% Clear and close
 clear; close all
@@ -32,7 +30,7 @@ end
 wls = SToWls(S);
 
 %% Point at directory with spectra
-projectName = 'SpatioSpectralStimulator';
+projectName = 'SConeSpatial';
 % LEDMeasDateStr = '2021-07-08';
 % LEDSpectraDir = fullfile(getpref(projectName,'LEDSpectraDir'),LEDMeasDateStr);
 
@@ -45,7 +43,7 @@ LEDInFileName = ['FullWhite' mode 'SPD'];
 LEDOutFileName = ['FullWhite' mode 'SPD_UW'];
 XLSOutFileName = ['FullWhite' mode];
 LEDMeasDateStr = '2022-05-05';
-LEDSpectraDir = fullfile(getpref(projectName,'CheckDataFolder'));
+LEDSpectraDir = fullfile(getpref(projectName,'CheckDataFolderSACC'));
 inFilename = fullfile(LEDSpectraDir,append(LEDInFileName,'_',LEDMeasDateStr,'.mat'));
 outFilename = fullfile(LEDSpectraDir,append(LEDOutFileName,'_',LEDMeasDateStr,'.mat'));
 xlsFilename = fullfile(LEDSpectraDir,append(XLSOutFileName,'_',LEDMeasDateStr,'.xlsx'));
@@ -72,30 +70,6 @@ mWToUW = 1000;
 
 %% Get the maximum spd in uW per wavelength band
 maxSpdUW = mWToUW*(spd_w-spd_blk);
-
-% %% Define LED properties.
-% %
-% % Assume equal max power and bandwidth across LEDs
-% LEDPeaksNm = [425  450  467.5  480 502.5 527.5  532.5  560  571  587.  595  619  629  640  657  670];
-% 
-% % Amount of light we lose between measurement and entering the eye.
-% powerLossFactor = 0.01;
-% 
-% % These are the one panel numbers from spreadsheet in email of 11/20/20
-% LEDMaxPowerUW = [7.7936   10.1609   14.8317   10.2381    7.6416    9.0432    6.4153    0.0526    0.0609    4.3816    1.9000    7.7766    8.8047   11.7608   13.0074    8.6279];
-% LEDMaxPowerUW = [2   2   2   2    2    2    2    2    2    2    2    2    2   2   2    2];
-% 
-% % Turn LEDs into Gaussian spds of specified power each
-% LEDFWHM = 15;
-% LEDStandardDeviationNm = FWHMToStd(LEDFWHM);
-% LEDPrimaries = zeros(length(wls),length(LEDPeaksNm));
-% for ii = 1:length(LEDPeaksNm)
-%     LEDPrimaries(:,ii) = normpdf(wls, LEDPeaksNm(ii), LEDStandardDeviationNm);
-%     LEDPrimaries(:,ii) = powerLossFactor*LEDMaxPowerUW(ii)*LEDPrimaries(:,ii)/sum(LEDPrimaries(:,ii));
-% end
-% maxSpd = sum(LEDPrimaries,2);
-% maxSpdPowerUW = sum(maxSpd);
-% fprintf('Total max power is %0.3f uW\n',maxSpdPowerUW);
 
 % Power in maxSpd *assumes 1 nm spacing enforced above)
 maxSpdPowerUW = sum(maxSpdUW);
